@@ -14,7 +14,7 @@ merge or a specific review timeline.
 
 ## Compatibility
 
-BlendSplit 1.2 targets **Blender 5.2**, which includes **Python 3.13**. Users do
+BlendSplit 1.3 targets **Blender 5.2**, which includes **Python 3.13**. Users do
 not need to install Python or any Python packages—the extension uses Blender's
 built-in Python runtime and APIs.
 

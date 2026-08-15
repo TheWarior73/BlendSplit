@@ -220,6 +220,7 @@ def _settings_payload(settings: object, profile_id: str, revision: int) -> dict:
         "title": settings.run_title,
         "category": settings.category,
         "attempts": settings.attempts,
+        "timer_only_pb": settings.timer_only_pb,
         "splits": [
             {
                 "name": item.name,
@@ -241,6 +242,7 @@ def _apply_profile(settings: object, profile: dict) -> None:
         settings.run_title = profile["title"]
         settings.category = profile["category"]
         settings.attempts = profile["attempts"]
+        settings.timer_only_pb = profile["timer_only_pb"]
         settings.splits.clear()
         for split in profile["splits"]:
             item = settings.splits.add()

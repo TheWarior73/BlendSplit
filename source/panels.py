@@ -49,7 +49,7 @@ class BLENDSPLIT_MT_profiles(Menu):
 
 
 class BLENDSPLIT_PT_main(Panel):
-    bl_label = "BlendSplit v1.2"
+    bl_label = "BlendSplit v1.3"
     bl_idname = "BLENDSPLIT_PT_main"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
@@ -107,7 +107,7 @@ class BLENDSPLIT_PT_profile(Panel):
         layout = self.layout
         settings = context.scene.blendsplit
         content = layout.column()
-        content.enabled = runtime.engine.state == RunState.IDLE
+        content.enabled = runtime.engine.state in {RunState.IDLE, RunState.FINISHED}
 
         profile_row = content.row(align=True)
         profile_label = settings.run_title if settings.profile_id else "Choose Profile…"
@@ -135,12 +135,13 @@ class BLENDSPLIT_PT_splits(Panel):
     bl_parent_id = "BLENDSPLIT_PT_main"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
+    bl_options = {"DEFAULT_CLOSED"}
 
     def draw(self, context: bpy.types.Context) -> None:
         layout = self.layout
         settings = context.scene.blendsplit
         content = layout.column()
-        content.enabled = runtime.engine.state == RunState.IDLE
+        content.enabled = runtime.engine.state in {RunState.IDLE, RunState.FINISHED}
         content.prop(settings, "run_title")
         content.prop(settings, "category")
         content.operator("blendsplit.random_speedrun", icon="QUESTION")
@@ -182,7 +183,7 @@ class BLENDSPLIT_PT_splits(Panel):
         choose_split = icon_row.operator("blendsplit.choose_icon", text="Choose…")
         choose_split.split_index = index
 
-        if runtime.engine.state != RunState.IDLE:
+        if runtime.engine.state in {RunState.RUNNING, RunState.PAUSED}:
             layout.label(text="Reset the timer to edit splits", icon="LOCKED")
 
 
@@ -225,12 +226,9 @@ class BLENDSPLIT_PT_advanced(Panel):
         layout = self.layout
         settings = context.scene.blendsplit
         column = layout.column()
-        column.enabled = runtime.engine.state == RunState.IDLE
+        column.enabled = runtime.engine.state in {RunState.IDLE, RunState.FINISHED}
         column.prop(settings, "attempts")
-        if settings.splits:
-            column.prop(settings, "overall_pb")
-        else:
-            column.label(text="Add splits before setting a PB", icon="INFO")
+        column.prop(settings, "overall_pb")
         column.separator()
         column.operator("blendsplit.clear_pb", text="Clear PB and Best Segments", icon="TRASH")
 

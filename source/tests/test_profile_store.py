@@ -29,6 +29,7 @@ def sample_library(title: str = "Cube Run") -> dict:
                 "title": title,
                 "category": "Any%",
                 "attempts": 4,
+                "timer_only_pb": 3.5,
                 "splits": [{
                     "name": "Cube",
                     "blender_icon": "MESH_CUBE",
@@ -41,6 +42,14 @@ def sample_library(title: str = "Cube Run") -> dict:
 
 
 class ProfileStoreTests(unittest.TestCase):
+    def test_timer_only_pb_is_preserved_and_defaults_for_old_profiles(self) -> None:
+        profile = normalize_library(sample_library(), ICONS)["profiles"]["cube"]
+        self.assertEqual(profile["timer_only_pb"], 3.5)
+        data = sample_library()
+        del data["profiles"]["cube"]["timer_only_pb"]
+        profile = normalize_library(data, ICONS)["profiles"]["cube"]
+        self.assertEqual(profile["timer_only_pb"], -1.0)
+
     def test_atomic_round_trip_and_backup(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = pathlib.Path(directory) / "profiles.json"

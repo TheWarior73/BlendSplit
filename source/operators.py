@@ -49,7 +49,7 @@ def _blender_icon_items(_self: object, _context: bpy.types.Context) -> list[tupl
 
 
 def _editable(context: bpy.types.Context) -> bool:
-    return runtime.engine.state == RunState.IDLE
+    return runtime.engine.state in {RunState.IDLE, RunState.FINISHED}
 
 
 class BLENDSPLIT_OT_start_split(Operator):
@@ -60,8 +60,7 @@ class BLENDSPLIT_OT_start_split(Operator):
 
     @classmethod
     def poll(cls, context: bpy.types.Context) -> bool:
-        settings = context.scene.blendsplit if runtime.engine.state == RunState.FINISHED else runtime.settings_for_context(context)
-        return bool(settings.splits) and runtime.engine.state != RunState.PAUSED
+        return runtime.engine.state != RunState.PAUSED
 
     def execute(self, context: bpy.types.Context) -> set[str]:
         if runtime.engine.state in {RunState.IDLE, RunState.FINISHED}:
@@ -501,13 +500,15 @@ class BLENDSPLIT_OT_clear_pb(Operator):
 
     @classmethod
     def poll(cls, context: bpy.types.Context) -> bool:
-        return _editable(context) and bool(context.scene.blendsplit.splits)
+        settings = context.scene.blendsplit
+        return _editable(context) and (bool(settings.splits) or settings.timer_only_pb >= 0)
 
     def invoke(self, context: bpy.types.Context, event: bpy.types.Event) -> set[str]:
         return context.window_manager.invoke_confirm(self, event)
 
     def execute(self, context: bpy.types.Context) -> set[str]:
         settings = context.scene.blendsplit
+        settings.timer_only_pb = -1.0
         for item in settings.splits:
             item.pb_time = -1.0
             item.best_segment = -1.0

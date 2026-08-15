@@ -80,13 +80,15 @@ class BlendSplitSegment(PropertyGroup):
 
 def _get_overall_pb(self: "BlendSplitSettings") -> float:
     if not self.splits:
-        return 0.0
+        return max(0.0, self.timer_only_pb)
     return max(0.0, self.splits[-1].pb_time)
 
 
 def _set_overall_pb(self: "BlendSplitSettings", value: float) -> None:
     if self.splits:
         self.splits[-1].pb_time = value if value > 0 else -1.0
+    else:
+        self.timer_only_pb = value if value > 0 else -1.0
     from . import profiles, runtime
 
     runtime.tag_view3d_redraw()
@@ -128,6 +130,14 @@ class BlendSplitSettings(PropertyGroup):
         default=0,
         min=0,
         update=_profile_changed,
+    )
+    timer_only_pb: FloatProperty(
+        name="Timer-only PB",
+        description="Personal-best time for runs without configured splits; -1 means unset",
+        default=-1.0,
+        min=-1.0,
+        precision=3,
+        options={"HIDDEN"},
     )
     overall_pb: FloatProperty(
         name="Overall PB",

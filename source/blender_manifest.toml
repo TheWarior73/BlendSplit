@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "blendsplit"
-version = "1.2.0"
+version = "1.3.0"
 name = "BlendSplit"
 tagline = "Live speedrun splits inside the 3D Viewport"
 maintainer = "Polyfjord"

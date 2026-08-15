@@ -21,7 +21,7 @@ Start, pause, undo, skip, and reset from one panel. Adjust the overlay's
 position, scale, width, opacity, precision, and visible information to fit your
 workspace.
 
-BlendSplit 1.2 supports Blender 5.2.
+BlendSplit 1.3 supports Blender 5.2.
 
 ## Install
 

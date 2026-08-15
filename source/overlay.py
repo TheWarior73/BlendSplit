@@ -211,9 +211,8 @@ def _draw_overlay() -> None:
         footer_top = y + footer_height
         _rect(x, footer_top, width, max(1.0, scale), DIVIDER)
 
-        pb_ns = None
-        if settings.splits and settings.splits[-1].pb_time >= 0:
-            pb_ns = runtime.seconds_to_ns(settings.splits[-1].pb_time)
+        overall_pb = settings.splits[-1].pb_time if settings.splits else settings.timer_only_pb
+        pb_ns = runtime.seconds_to_ns(overall_pb) if overall_pb >= 0 else None
         if settings.show_pb:
             pb_label = f"PB  {format_time(pb_ns, decimals)}" if pb_ns is not None else "PB  —"
             _text(pb_label, x + pad, y + 13 * scale, small_size, MUTED)
@@ -221,7 +220,7 @@ def _draw_overlay() -> None:
         elapsed = runtime.engine.elapsed_ns()
         timer_color = TEXT
         current = runtime.engine.current_index
-        if settings.show_pb and runtime.engine.is_active and current < len(settings.splits):
+        if settings.show_pb and runtime.engine.is_active and current < runtime.engine.segment_count:
             target = runtime.comparison_pb_time(current)
             if target >= 0:
                 timer_color = GREEN if elapsed <= runtime.seconds_to_ns(target) else RED

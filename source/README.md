@@ -1,14 +1,15 @@
-# BlendSplit 1.2.0
+# BlendSplit 1.3.0
 
 BlendSplit is a lightweight, LiveSplit-inspired speedrun timer built directly
-into Blender's 3D Viewport. Version 1.2 targets Blender 5.2 and is authored by
+into Blender's 3D Viewport. Version 1.3 targets Blender 5.2 and is authored by
 Polyfjord.
 
-## What's new in 1.2
+## What's new in 1.3
 
-- Overlay visibility, scale, width, position, and display choices persist globally
-- A **Reset UI Settings** action restores all overlay defaults
-- Default shortcuts now use the less intrusive `Ctrl Shift Alt 1` through `6`
+- Start and finish a simple timer with PB comparisons without configuring splits first
+- Edit splits, save profiles, and import or export setups after finishing a run
+- Apply split icons immediately without an extra confirmation click
+- Start with only the Run panel expanded; Blender remembers later panel choices
 
 ## Features
 
@@ -50,7 +51,7 @@ Writes are atomic and one valid backup is retained.
 
 ## Install
 
-1. Build the extension ZIP or download `blendsplit-1.2.0.zip`.
+1. Build the extension ZIP or download `blendsplit-1.3.0.zip`.
 2. In Blender 5.2, open **Edit > Preferences > Extensions**.
 3. Open the menu and choose **Install from Disk**.
 4. Select the ZIP and enable **BlendSplit**.

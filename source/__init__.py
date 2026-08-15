@@ -5,7 +5,7 @@ from __future__ import annotations
 bl_info = {
     "name": "BlendSplit",
     "author": "Polyfjord",
-    "version": (1, 2, 0),
+    "version": (1, 3, 0),
     "blender": (5, 2, 0),
     "location": "3D Viewport > Sidebar > Speedrun",
     "description": "Live speedrun splits inside the 3D Viewport",

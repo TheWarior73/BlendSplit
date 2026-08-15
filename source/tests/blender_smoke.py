@@ -25,9 +25,34 @@ addon.profiles.profile_library_path = lambda: profile_directory / "profiles.json
 try:
     assert addon.panels.BLENDSPLIT_PT_profile.bl_label == "Profile"
     assert addon.panels.BLENDSPLIT_PT_profile.bl_options == {"DEFAULT_CLOSED"}
+    assert getattr(addon.panels.BLENDSPLIT_PT_run, "bl_options", set()) == set()
+    assert addon.panels.BLENDSPLIT_PT_splits.bl_options == {"DEFAULT_CLOSED"}
+    assert addon.panels.BLENDSPLIT_PT_overlay.bl_options == {"DEFAULT_CLOSED"}
+    assert addon.panels.BLENDSPLIT_PT_advanced.bl_options == {"DEFAULT_CLOSED"}
     assert not hasattr(addon.panels, "BLENDSPLIT_PT_transfer")
     settings = bpy.context.scene.blendsplit
     assert settings.run_title == "Untitled Blender Run"
+
+    # A fresh install works as a simple timer before splits are configured.
+    assert not settings.splits
+    assert bpy.ops.blendsplit.start_split.poll()
+    assert bpy.ops.blendsplit.start_split() == {"FINISHED"}
+    assert addon.runtime.engine.is_active
+    assert addon.runtime.engine.segment_count == 1
+    assert bpy.ops.blendsplit.start_split() == {"FINISHED"}
+    assert addon.runtime.engine.state.value == "FINISHED"
+    assert settings.timer_only_pb >= 0
+    first_timer_pb = settings.timer_only_pb
+    addon.runtime.reset_run()
+    assert bpy.ops.blendsplit.start_split() == {"FINISHED"}
+    assert abs(addon.runtime.comparison_pb_time(0) - first_timer_pb) < 0.00001
+    assert bpy.ops.blendsplit.start_split() == {"FINISHED"}
+    assert settings.overall_pb >= 0
+    assert bpy.ops.blendsplit.add_starter_splits.poll()
+    assert bpy.ops.blendsplit.random_speedrun.poll()
+    assert bpy.ops.blendsplit.import_list.poll()
+    addon.runtime.reset_run()
+
     bpy.ops.blendsplit.add_starter_splits()
     assert len(settings.splits) == 3
     assert not hasattr(settings.splits[0], "icon")
@@ -103,6 +128,12 @@ try:
         addon.runtime.record_split(settings)
     assert all(item.pb_time >= 0 for item in settings.splits)
     assert all(addon.runtime.comparison_pb_time(index) < 0 for index in range(3))
+    # Setup, profile, and transfer actions are available after the final split.
+    assert addon.runtime.engine.state.value == "FINISHED"
+    assert bpy.ops.blendsplit.add_split.poll()
+    assert bpy.ops.blendsplit.random_speedrun.poll()
+    assert bpy.ops.blendsplit.save_profile.poll()
+    assert bpy.ops.blendsplit.export_list.poll()
     addon.runtime.reset_run()
     settings.attempts = 0
     for item in settings.splits:
@@ -117,6 +148,7 @@ try:
     addon.handlers.normalize_scene_icons()
     assert settings.splits[1].blender_icon == "NONE"
     assert "page" not in bpy.ops.blendsplit.choose_icon.get_rna_type().properties
+    assert addon.operators.BLENDSPLIT_OT_choose_icon.bl_options == {"INTERNAL"}
     picker_ids = [item[0] for item in addon.operators._blender_icon_items(None, bpy.context)]
     assert len(picker_ids) == 101
     assert picker_ids[0] == "NONE"

@@ -148,6 +148,7 @@ def normalize_profile(
     title = _text(data.get("title"), "profile title")
     category = _text(data.get("category"), "profile category")
     attempts = data.get("attempts", 0)
+    timer_only_pb = _time(data.get("timer_only_pb", -1.0))
     revision = data.get("revision", 1)
     if not isinstance(attempts, int) or isinstance(attempts, bool) or attempts < 0:
         raise ProfileStoreError("Invalid attempt count")
@@ -176,6 +177,7 @@ def normalize_profile(
         "title": title,
         "category": category,
         "attempts": attempts,
+        "timer_only_pb": timer_only_pb,
         "splits": splits,
     }
 

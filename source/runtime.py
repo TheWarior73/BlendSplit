@@ -31,13 +31,20 @@ def settings_for_context(context: bpy.types.Context) -> "BlendSplitSettings":
 def begin_run(scene: bpy.types.Scene) -> None:
     global active_scene_name, last_gold_index, _pb_before_finish
     settings = scene.blendsplit
-    engine.start(len(settings.splits))
+    # With no split setup, behave as a simple start/finish timer. Keeping the
+    # synthetic segment in the engine (rather than the scene) leaves starter
+    # splits and random challenges entirely optional.
+    engine.start(max(1, len(settings.splits)))
     settings.attempts += 1
     active_scene_name = scene.name
     last_gold_index = None
     _pb_before_finish = None
     _best_before_split.clear()
-    _comparison_pb[:] = [item.pb_time for item in settings.splits]
+    _comparison_pb[:] = (
+        [item.pb_time for item in settings.splits]
+        if settings.splits
+        else [settings.timer_only_pb]
+    )
     _persist_profile(settings)
     tag_view3d_redraw()
 
@@ -48,8 +55,20 @@ def comparison_pb_time(index: int) -> float:
 
 
 def record_split(settings: "BlendSplitSettings") -> None:
-    global last_gold_index
+    global last_gold_index, _pb_before_finish
     result = engine.split()
+    if result.index >= len(settings.splits):
+        finish = result.cumulative_ns
+        old_pb = settings.timer_only_pb
+        if finish is not None and (old_pb < 0 or finish < seconds_to_ns(old_pb)):
+            _pb_before_finish = [old_pb]
+            settings.timer_only_pb = finish / 1_000_000_000
+        else:
+            _pb_before_finish = None
+        _persist_profile(settings)
+        tag_view3d_redraw()
+        return
+
     item = settings.splits[result.index]
     old_best = item.best_segment
     if result.segment_ns is not None and (old_best < 0 or result.segment_ns < seconds_to_ns(old_best)):
@@ -86,8 +105,11 @@ def undo_split(settings: "BlendSplitSettings") -> None:
     # A finished run may have become the PB. Undoing it must not leave partial
     # PB data. The previous PB is cached only for the duration of completion.
     if was_finished and _pb_before_finish is not None:
-        for item, value in zip(settings.splits, _pb_before_finish, strict=False):
-            item.pb_time = value
+        if settings.splits:
+            for item, value in zip(settings.splits, _pb_before_finish, strict=False):
+                item.pb_time = value
+        else:
+            settings.timer_only_pb = _pb_before_finish[0]
     last_gold_index = None
     _persist_profile(settings)
     tag_view3d_redraw()
