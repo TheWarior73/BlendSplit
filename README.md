@@ -1,14 +1,31 @@
 # BlendSplit
 
-BlendSplit is a LiveSplit-inspired speedrun timer extension for Blender. It
-adds a timer, splits, personal bests, and run profiles directly to the 3D
-Viewport.
+**A LiveSplit-inspired speedrun timer built directly into Blender.**
+
+![BlendSplit timer overlay in Blender](BlendSplit_v1.2_Overlay_UI.png)
+
+Track splits, attempts, and personal bests without leaving the 3D Viewport.
+The overlay is fully customizable, and your runs are always close at hand in
+the Blender sidebar.
+
+## Make it your run
+
+| Custom splits | Blender icons |
+|---|---|
+| ![Custom speedrun splits](BlendSplit_v1.2_Splits.png) | ![Blender icon picker](BlendSplit_v1.2_Icon.png) |
+| Create and reorder your own splits, or generate a random Blender speedrun. | Give every split a familiar Blender icon. |
+
+![BlendSplit controls and overlay settings](BlendSplit_v1.2_Sidebar.png)
+
+Start, pause, undo, skip, and reset from one panel. Adjust the overlay's
+position, scale, width, opacity, precision, and visible information to fit your
+workspace.
 
 BlendSplit 1.2 supports Blender 5.2.
 
 ## Install
 
-1. Download the latest `blendsplit-*.zip` from
+1. Download `blendsplit-*.zip` from the latest
    [GitHub Releases](https://github.com/polyfjord/BlendSplit/releases/latest).
 2. In Blender, open **Edit > Preferences > Extensions**.
 3. Open the menu in the top-right and choose **Install from Disk**.
