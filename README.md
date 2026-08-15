@@ -51,6 +51,7 @@ The extension source is in [`source/`](source/). To run the tests without
 opening Blender:
 
 ```bash
+python3 -m pip install -r requirements-dev.txt
 cd source
 python3 -m unittest discover -s tests -v
 ```
