@@ -1,0 +1,29 @@
+schema_version = "1.0.0"
+
+id = "blendsplit"
+version = "1.2.0"
+name = "BlendSplit"
+tagline = "Live speedrun splits inside the 3D Viewport"
+maintainer = "Polyfjord"
+type = "add-on"
+
+blender_version_min = "5.2.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
+
+tags = ["3D View", "User Interface"]
+
+[permissions]
+files = "Store profiles and import or export speedrun lists"
+
+[build]
+paths_exclude_pattern = [
+  "__pycache__/",
+  ".git/",
+  ".pytest_cache/",
+  "dist/",
+  "tests/",
+  "*.zip",
+]
