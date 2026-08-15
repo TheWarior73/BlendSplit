@@ -2,7 +2,7 @@
 
 **A LiveSplit-inspired speedrun timer built directly into Blender.**
 
-![BlendSplit timer overlay in Blender](BlendSplit_v1.2_Overlay_UI.png)
+![BlendSplit timer overlay in Blender](docs/images/overlay-ui.png)
 
 Track splits, attempts, and personal bests without leaving the 3D Viewport.
 The overlay is fully customizable, and your runs are always close at hand in
@@ -12,10 +12,10 @@ the Blender sidebar.
 
 | Custom splits | Blender icons |
 |---|---|
-| ![Custom speedrun splits](BlendSplit_v1.2_Splits.png) | ![Blender icon picker](BlendSplit_v1.2_Icon.png) |
+| ![Custom speedrun splits](docs/images/custom-splits.png) | ![Blender icon picker](docs/images/icon-picker.png) |
 | Create and reorder your own splits, or generate a random Blender speedrun. | Give every split a familiar Blender icon. |
 
-![BlendSplit controls and overlay settings](BlendSplit_v1.2_Sidebar.png)
+![BlendSplit controls and overlay settings](docs/images/sidebar.png)
 
 Start, pause, undo, skip, and reset from one panel. Adjust the overlay's
 position, scale, width, opacity, precision, and visible information to fit your
